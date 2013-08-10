@@ -1,0 +1,5 @@
+<launch>
+  <node name="koki_node" pkg="koki" type="roskoki2.py">
+  	<remap to="/ardrone/image_raw" from="/image_topic"/>
+ </node>
+</launch>
