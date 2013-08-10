@@ -1,5 +1,6 @@
 <launch>
-  <node name="koki_node" pkg="koki" type="roskoki2.py">
+  <node name="koki_vision" pkg="koki" type="roskoki2.py">
   	<remap to="/ardrone/image_raw" from="/image_topic"/>
  </node>
+ <node name="koki_controller" pkg="koki" type="roslisten.py"/>
 </launch>
