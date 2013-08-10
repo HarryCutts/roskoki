@@ -128,7 +128,7 @@ def listener():
 # Main function.
 if __name__ == '__main__':
 
-    droneController.SendTakeoff()
+    #droneController.SendTakeoff()
 
     # Go to the main loop.
     listener()
