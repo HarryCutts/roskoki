@@ -10,11 +10,13 @@ import rospy
 from std_msgs.msg import String
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
+from koki.msg import KokiMsg
 
 class roskoki:
 
   def __init__(self):
     self.image_pub = rospy.Publisher("image_topic_2",Image)
+    self.tag_pub = rospy.Publisher("koki_tags",KokiMsg)
 
     cv.NamedWindow("Image window", 1)
     self.bridge = CvBridge()
@@ -43,7 +45,11 @@ class roskoki:
     cv.ShowImage("Image window", cv_image)
     cv.WaitKey(3)
 
+    tags = KokiMsg()
+    tags.tags = [1,2]
+
     try:
+      self.tag_pub.publish(tags)
       self.image_pub.publish(self.bridge.cv_to_imgmsg(cv_image, "bgr8"))
     except CvBridgeError, e:
       print e
