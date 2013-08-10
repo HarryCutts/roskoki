@@ -16,6 +16,7 @@ class roskoki:
 
   def __init__(self):
     self.tag_pub = rospy.Publisher("koki_tags",KokiMsg)
+    self.marker_pub = rospy.Publisher("koki_markers",Kokimarkers)
 
     cv.NamedWindow("Image window", 1)
     self.bridge = CvBridge()
@@ -34,10 +35,19 @@ class roskoki:
       markers = koki.find_markers( cv_image, 0.1, params )
 
       seencodes=[]
+      seenmarkers=[]
       #rospy.logwarn(markers)
       for m in markers:
+	  makrerinfo=Kokimarker()
           rospy.loginfo("Code: " + str(m.code))
+          rospy.loginfo("Bearing: " + str(m.bearing))
+          rospy.loginfo("distance: " + str(m.distance))
           seencodes.append(m.code)
+	  markerinfo.ID = m.code
+          markerinfo.bearing = m.bearing
+          markerinfo.distance = m.distance
+          seenmarkers.append(markerinfo)
+          
 
     except CvBridgeError, e:
       rospy.logwarn(str(e))
@@ -49,8 +59,12 @@ class roskoki:
     tags = KokiMsg()
     tags.tags = seencodes
 
+    details = Kokimarkers()
+    details.markers = seenmarkers
+
     try:
       self.tag_pub.publish(tags)
+      self.marker_pub.publish(details)
     except CvBridgeError, e:
       print e
 
