@@ -23,7 +23,7 @@ from drone_status import DroneStatus
 from koki.msg import KokiMsg
 
 #Import drone controller
-from koki.bin.drone_controller import BasicDroneController
+'''from koki.bin.drone_controller import BasicDroneController'''
 
 
 # Some Constants
@@ -95,6 +95,8 @@ class BasicDroneController(object):
 
 
 
+# Initialize the node and name it.
+rospy.init_node('kokilisten', anonymous = True)
 
 #Initialize drone controller
 droneController = BasicDroneController()
@@ -118,8 +120,6 @@ def listener():
 
 # Main function.
 if __name__ == '__main__':
-    # Initialize the node and name it.
-    rospy.init_node('kokilisten', anonymous = True)
 
     droneController.SendTakeoff()
 
