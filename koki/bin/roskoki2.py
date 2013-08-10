@@ -10,7 +10,7 @@ import rospy
 from std_msgs.msg import String
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
-from koki.msg import KokiMsg
+from koki.msg import *
 
 class roskoki:
 
@@ -38,7 +38,7 @@ class roskoki:
       seenmarkers=[]
       #rospy.logwarn(markers)
       for m in markers:
-	  makrerinfo=Kokimarker()
+	  markerinfo=Kokimarker()
           rospy.loginfo("Code: " + str(m.code))
           rospy.loginfo("Bearing: " + str(m.bearing))
           rospy.loginfo("distance: " + str(m.distance))
