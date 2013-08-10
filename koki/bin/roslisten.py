@@ -106,8 +106,15 @@ def callback(data):
     # Simply print out values in our custom message.
     rospy.logwarn(rospy.get_name() + " I heard %s", data.tags)
     tags = list(data.tags)
-    if len([t for t in tags if t>130 and t<200])>0:
-        droneController.SendLand()
+    if 162 in tags: droneController.SendTakeoff() #yellow
+    elif 141 in tags: droneController.SendLand() #green
+    elif 158 in tags: #pink
+	    droneController.SetCommand(yaw_velocity=10.)
+	    droneController.SendCommand(None)
+    else:
+	    droneController.SetCommand(yaw_velocity=0.)
+	    droneController.SendCommand(None)
+
 
 # This ends up being the main while loop.
 def listener():
