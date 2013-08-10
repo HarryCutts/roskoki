@@ -15,7 +15,6 @@ from koki.msg import KokiMsg
 class roskoki:
 
   def __init__(self):
-    self.image_pub = rospy.Publisher("image_topic_2",Image)
     self.tag_pub = rospy.Publisher("koki_tags",KokiMsg)
 
     cv.NamedWindow("Image window", 1)
@@ -25,9 +24,6 @@ class roskoki:
   def callback(self,data):
     try:
       cv_image = cv.GetImage(self.bridge.imgmsg_to_cv(data, "mono8")) 
-      """cv_image = cv2.cvtColor(col_image, cv2.COLOR_BGR2GRAY)"""
-      """print 'success',type(cv_image)"""
-      rospy.logwarn('type image'+str(type(cv_image)))
 
       koki = PyKoki()
 
@@ -35,7 +31,6 @@ class roskoki:
                           Point2Df(571, 571),
                           Point2Di( cv_image.width, cv_image.height ))
 
-      rospy.logwarn('image here'+str(cv_image))
       markers = koki.find_markers( cv_image, 0.1, params )
 
       seencodes=[]
@@ -45,24 +40,23 @@ class roskoki:
           seencodes.append(m.code)
 
     except CvBridgeError, e:
-      print e
+      rospy.logwarn(str(e))
       """print 'did not get image'"""
 
-    cv.ShowImage("Image window", cv_image)
-    cv.WaitKey(3)
+#    cv.ShowImage("Image window", cv_image)
+#    cv.WaitKey(3)
 
     tags = KokiMsg()
     tags.tags = seencodes
 
     try:
       self.tag_pub.publish(tags)
-      self.image_pub.publish(self.bridge.cv_to_imgmsg(cv_image, "bgr8"))
     except CvBridgeError, e:
       print e
 
 def main(args):
   ic = roskoki()
-  rospy.init_node('image_converter', anonymous=True)
+  rospy.init_node('koki_marker_finder', anonymous=True)
   try:
     rospy.spin()
   except KeyboardInterrupt:
