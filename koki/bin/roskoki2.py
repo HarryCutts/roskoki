@@ -36,7 +36,7 @@ class roskoki:
       seencodes=[]
       #rospy.logwarn(markers)
       for m in markers:
-          rospy.logwarn("Code: " + str(m.code))
+          rospy.loginfo("Code: " + str(m.code))
           seencodes.append(m.code)
 
     except CvBridgeError, e:
@@ -55,8 +55,8 @@ class roskoki:
       print e
 
 def main(args):
-  ic = roskoki()
   rospy.init_node('koki_marker_finder', anonymous=True)
+  ic = roskoki()
   try:
     rospy.spin()
   except KeyboardInterrupt:
