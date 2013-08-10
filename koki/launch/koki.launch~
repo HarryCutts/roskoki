@@ -1,5 +1,0 @@
-<launch>
-  <node name="koki_node" package="koki" type="image_ros.py">
-  	<remap from="/ardrone/image_raw" to="/image_topic"/>
- </node>
-</launch>
