@@ -36,7 +36,13 @@ class roskoki:
                           Point2Di( cv_image.width, cv_image.height ))
 
       rospy.logwarn('image here'+str(cv_image))
-      rospy.logwarn(koki.find_markers( cv_image, 0.1, params ))
+      markers = koki.find_markers( cv_image, 0.1, params )
+
+      seencodes=[]
+      #rospy.logwarn(markers)
+      for m in markers:
+          rospy.logwarn("Code: " + str(m.code))
+          seencodes.append(m.code)
 
     except CvBridgeError, e:
       print e
@@ -46,7 +52,7 @@ class roskoki:
     cv.WaitKey(3)
 
     tags = KokiMsg()
-    tags.tags = [1,2]
+    tags.tags = seencodes
 
     try:
       self.tag_pub.publish(tags)
