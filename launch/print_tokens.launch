@@ -1,0 +1,13 @@
+<launch>
+	<!-- Start GSCAM -->
+	<arg name="cam_name" value="webcam"/>
+	<env name="GSCAM_CONFIG" value="v4l2src device=/dev/video0 ! video/x-raw-rgb,framerate=30/1 ! ffmpegcolorspace"/>
+	<node pkg="gscam" type="gscam" name="$(arg cam_name)">
+		<param name="camera_name" value="$(arg cam_name)" />
+	</node>
+
+	<node name="koki_vision" pkg="koki" type="roskoki2.py">
+		<remap to="/gscam/image_raw" from="/image_topic"/>
+	</node>
+	<node name="printer" pkg="koki" type="print_tokens.py"/>
+</launch>
