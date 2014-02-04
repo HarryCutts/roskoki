@@ -22,21 +22,21 @@ class roskoki:
         self.bridge = CvBridge()
         self.image_sub = rospy.Subscriber("image_topic",Image,self.callback)
 
+        self.koki = PyKoki()
+
+
     def callback(self,data):
         try:
             cv_image = cv.GetImage(self.bridge.imgmsg_to_cv(data, "mono8")) 
 
-            koki = PyKoki()
+            koki_params = CameraParams(Point2Df( cv_image.width/2, cv_image.height/2 ),
+                                       Point2Df(571, 571),
+                                       Point2Di( cv_image.width, cv_image.height ))
 
-            params = CameraParams(Point2Df( cv_image.width/2, cv_image.height/2 ),
-                                  Point2Df(571, 571),
-                                  Point2Di( cv_image.width, cv_image.height ))
-
-            markers = koki.find_markers( cv_image, 0.1, params )
+            markers = self.koki.find_markers( cv_image, 0.1, koki_params )
 
             seencodes=[]
             seenmarkers=[]
-            #rospy.logwarn(markers)
             for m in markers:
                 markerinfo=Kokimarker()
                 rospy.loginfo("Code: " + str(m.code))
