@@ -19,7 +19,7 @@ def _koki_vertex_to_msg(struct):
     return MarkerVertex(image = _koki_point_to_msg(struct.image), world = _koki_point_to_msg(struct.world))
 
 
-class roskoki:
+class MarkerFinder:
 
     def __init__(self):
         self.code_pub = rospy.Publisher("koki_codes", KokiCodeArray)
@@ -66,7 +66,7 @@ class roskoki:
 
 def main(args):
     rospy.init_node('koki_marker_finder', anonymous=True)
-    ic = roskoki()
+    ic = MarkerFinder()
     try:
         rospy.spin()
     except KeyboardInterrupt:

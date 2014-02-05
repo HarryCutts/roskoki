@@ -6,7 +6,7 @@
 		<param name="camera_name" value="$(arg cam_name)" />
 	</node>
 
-	<node name="koki_vision" pkg="koki" type="roskoki2.py">
+	<node name="koki_vision" pkg="koki" type="marker_finder.py">
 		<remap to="/gscam/image_raw" from="/image_topic"/>
 	</node>
 	<node name="printer" pkg="koki" type="print_tokens.py" output="screen"/>
