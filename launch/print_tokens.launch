@@ -9,5 +9,5 @@
 	<node name="koki_vision" pkg="koki" type="roskoki2.py">
 		<remap to="/gscam/image_raw" from="/image_topic"/>
 	</node>
-	<node name="printer" pkg="koki" type="print_tokens.py"/>
+	<node name="printer" pkg="koki" type="print_tokens.py" output="screen"/>
 </launch>

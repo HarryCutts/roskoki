@@ -8,21 +8,28 @@ roslib.load_manifest('koki')
 import sys
 import rospy
 from std_msgs.msg import String
+from geometry_msgs.msg import Point
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
 from koki.msg import *
 
+def _koki_point_to_msg(point):
+    return Point(x = point.x, y = point.y, z = point.z if hasattr(point, 'z') else 0)
+
+def _koki_vertex_to_msg(struct):
+    return MarkerVertex(image = _koki_point_to_msg(struct.image), world = _koki_point_to_msg(struct.world))
+
 class roskoki:
 
     def __init__(self):
-        self.tag_pub = rospy.Publisher("koki_tags",KokiMsg)
-        self.marker_pub = rospy.Publisher("koki_markers",Kokimarkers)
+        self.code_pub = rospy.Publisher("koki_codes", KokiCodeArray)
+        self.marker_pub = rospy.Publisher("koki_markers", KokiFrame)
 
         cv.NamedWindow("Image window", 1)
         self.bridge = CvBridge()
         self.image_sub = rospy.Subscriber("image_topic",Image,self.callback)
 
-        self.koki = PyKoki()
+        self.koki = PyKoki('/usr/lib')
 
 
     def callback(self,data):
@@ -35,18 +42,21 @@ class roskoki:
 
             markers = self.koki.find_markers( cv_image, 0.1, koki_params )
 
-            seencodes=[]
-            seenmarkers=[]
+            seen_codes   = []
+            seen_markers = []
             for m in markers:
-                markerinfo=Kokimarker()
+                marker = KokiMarker(code            = m.code,
+                                    center          = _koki_vertex_to_msg(m.centre),
+                                    vertices        = (_koki_vertex_to_msg(vertex) for vertex in m.vertices),
+                                    rotation_offset = m.rotation_offset,
+                                    rotation        = _koki_point_to_msg(m.rotation),
+                                    bearing         = _koki_point_to_msg(m.bearing),
+                                    distance        = m.distance)
+                seen_codes.append(m.code)
+                seen_markers.append(marker)
                 rospy.loginfo("Code: " + str(m.code))
                 rospy.loginfo("Bearing: " + str(m.bearing))
                 rospy.loginfo("distance: " + str(m.distance))
-                seencodes.append(m.code)
-                markerinfo.ID = m.code
-                markerinfo.bearing = m.bearing
-                markerinfo.distance = m.distance
-                seenmarkers.append(markerinfo)
                     
 
         except CvBridgeError, e:
@@ -56,15 +66,15 @@ class roskoki:
 #        cv.ShowImage("Image window", cv_image)
 #        cv.WaitKey(3)
 
-        tags = KokiMsg()
-        tags.tags = seencodes
+        code_array = KokiCodeArray()
+        code_array.codes = seen_codes
 
-        details = Kokimarkers()
-        details.markers = seenmarkers
+        frame = KokiFrame()
+        frame.markers = seen_markers
 
         try:
-            self.tag_pub.publish(tags)
-            self.marker_pub.publish(details)
+            self.code_pub.publish(code_array)
+            self.marker_pub.publish(frame)
         except CvBridgeError, e:
             print e
 

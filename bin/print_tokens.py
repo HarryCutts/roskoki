@@ -6,19 +6,23 @@ roslib.load_manifest('koki')
 import rospy
 
 # Import custom message data.
-from koki.msg import KokiMsg
+from koki.msg import KokiFrame
 
 # Create a callback function for the subscriber.
 def callback(data):
     # Simply print out values in our custom message.
-    rospy.logwarn(rospy.get_name() + " I heard %s", data.tags)
+    marker_format = "{code} at {bearing}"
+    strings = []
+    for m in data.markers:
+        strings.append(marker_format.format(code = m.code, bearing = m.bearing.x))
+    rospy.loginfo(", ".join(strings))
 
 # This ends up being the main while loop.
 def listener():
     # Get the ~private namespace parameters from command line or launch file.
-    topic = rospy.get_param('~topic', 'koki_tags')
+    topic = rospy.get_param('~topic', 'koki_markers')
     # Create a subscriber with appropriate topic, custom message and name of callback function.
-    rospy.Subscriber(topic, KokiMsg, callback)
+    rospy.Subscriber(topic, KokiFrame, callback)
     # Wait for messages on topic, go to callback function when new messages arrive.
     rospy.spin()
 

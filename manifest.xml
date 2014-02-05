@@ -8,6 +8,7 @@
   <license>BSD</license>
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/koki</url>
+  <depend package="geometry_msgs"/>
   <depend package="sensor_msgs"/>
   <depend package="opencv2"/>
   <depend package="cv_bridge"/>
