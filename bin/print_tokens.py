@@ -11,10 +11,10 @@ from koki.msg import KokiFrame
 # Create a callback function for the subscriber.
 def callback(data):
     # Simply print out values in our custom message.
-    marker_format = "{code} at {bearing}"
+    marker_format = "{code} at {distance}m"
     strings = []
     for m in data.markers:
-        strings.append(marker_format.format(code = m.code, bearing = m.bearing.x))
+        strings.append(marker_format.format(code = m.code, distance = m.distance, bearing = m.bearing.x))
     rospy.loginfo(", ".join(strings))
 
 # This ends up being the main while loop.
