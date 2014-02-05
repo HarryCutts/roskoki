@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 
 # Import required Python code.
-import roslib
-roslib.load_manifest('koki')
+import roslib; roslib.load_manifest('koki')
 import rospy
 
 # Import custom message data.
@@ -15,6 +14,7 @@ def callback(data):
     strings = []
     for m in data.markers:
         strings.append(marker_format.format(code = m.code, distance = m.distance, bearing = m.bearing.x))
+
     rospy.loginfo(", ".join(strings))
 
 # This ends up being the main while loop.
