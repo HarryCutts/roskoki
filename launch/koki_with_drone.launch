@@ -1,0 +1,5 @@
+<launch>
+ <include file="$(find ardrone_autonomy)/launch/ardrone.launch" />
+ <node name="drone_gui" pkg="tum_ardrone" type="drone_gui" />
+ <include file="$(find koki)/launch/koki.launch" />
+</launch>

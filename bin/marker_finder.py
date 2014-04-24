@@ -36,10 +36,10 @@ class MarkerFinder:
             cv_image = cv.GetImage(self.bridge.imgmsg_to_cv(data, "mono8")) 
 
             koki_params = CameraParams(Point2Df(cv_image.width / 2, cv_image.height / 2),
-                                       Point2Df(571, 571),
+                                       Point2Df(216, 216),#571, 571),
                                        Point2Di(cv_image.width, cv_image.height))
 
-            markers = self.koki.find_markers(cv_image, 0.155, koki_params)  # TODO: allow for different marker sizes
+            markers = self.koki.find_markers(cv_image, 0.200, koki_params)  # TODO: allow for different marker sizes
 
             seen_codes   = []
             seen_markers = []
